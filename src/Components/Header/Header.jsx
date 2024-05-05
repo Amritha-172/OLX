@@ -26,9 +26,11 @@ function Header() {
   return (
     <div className="headerParentDiv">
       <div className="headerChildDiv">
-        <div className="brandName">
-          <OlxLogo></OlxLogo>
-        </div>
+        <NavLink to='/'>
+          <div className="brandName">
+            <OlxLogo></OlxLogo>
+          </div>
+        </NavLink >
         <div className="placeSearch">
           <Search></Search>
           <input type="text" />
@@ -49,23 +51,44 @@ function Header() {
           <span> ENGLISH </span>
           <Arrow></Arrow>
         </div>
-        <div className="loginPage">
-          <NavLink to="/login">
-            {" "}
-            <span>{user ? user.displayName : "Login"}</span>
-          </NavLink>
-
+        <div className="loginPage ">
+          <span className="text-black ">
+            {user ? (
+              user.displayName
+            ) : (
+              <NavLink className="text-black" to="/login">
+                Login
+              </NavLink>
+            )}
+          </span>
           <hr />
         </div>
-        {user && <span onClick={handleSignout}>Logout</span>}
-
-        <div className="sellMenu">
-          <SellButton></SellButton>
-          <div className="sellMenuContent">
-            <SellButtonPlus></SellButtonPlus>
-            <span>SELL</span>
+        {user && (
+          <span onClick={handleSignout} className="logoutPage">
+            Logout
+          </span>
+        )}
+        {user ? (
+          <div className="sellMenu">
+            <NavLink to="/create">
+              <SellButton></SellButton>
+              <div className="sellMenuContent">
+                <SellButtonPlus></SellButtonPlus>
+                <span>SELL</span>
+              </div>
+            </NavLink>
           </div>
-        </div>
+        ) : (
+          <div className="sellMenu">
+            <NavLink to="/login">
+              <SellButton></SellButton>
+              <div className="sellMenuContent">
+                <SellButtonPlus></SellButtonPlus>
+                <span>SELL</span>
+              </div>
+            </NavLink>
+          </div>
+        )}
       </div>
     </div>
   );

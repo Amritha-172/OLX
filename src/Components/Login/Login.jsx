@@ -3,23 +3,33 @@ import { FirebaseContext } from "../../store/Context";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebase/config";
 import { NavLink, useNavigate } from "react-router-dom";
-
+import Swal from "sweetalert2";
+import "bootstrap/dist/css/bootstrap.min.css";
 import Logo from "../../olx-logo.png";
 import "./Login.css";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const { firebase } = useContext(FirebaseContext);
   const Navigate = useNavigate();
   const handleLogin = (e) => {
     e.preventDefault();
     signInWithEmailAndPassword(auth, email, password)
       .then(() => {
+        setLoading(true);
         Navigate("/");
       })
       .catch((err) => {
-        alert(err.message);
+        Swal.fire({
+          title: "Error!",
+          text: "Invalid email or password",
+          icon: "error",
+          confirmButtonText: "Okay",
+        });
+        setEmail("");
+        setPassword("");
       });
   };
 
@@ -40,6 +50,15 @@ function Login() {
             defaultValue="John"
           />
           <br />
+          <div style={{ marginLeft: "100px" }}>
+            {loading ? (
+              <div className="spinner-border" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            ) : (
+              ""
+            )}
+          </div>
           <label htmlFor="lname">Password</label>
           <br />
           <input

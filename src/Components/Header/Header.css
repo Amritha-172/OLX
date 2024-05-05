@@ -4,6 +4,7 @@
   position: fixed;
   width: 100%;
   z-index: 999;
+  overflow-x: hidden;
 }
 
 .headerChildDiv {
@@ -36,10 +37,10 @@
 
 .productSearch {
   width: 35em;
-  height: 48px;
+  /* height: 48px; */
   border: 2px solid #002f34;
   border-radius: 4px;
-  display: flex;
+
   align-items: center;
   background-color: white;
   display: flex;
@@ -95,6 +96,9 @@
 }
 
 .language svg {
+}
+.logoutPage {
+  cursor: pointer;
 }
 
 .span {

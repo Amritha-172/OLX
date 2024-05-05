@@ -5,7 +5,9 @@ import { FirebaseContext } from "../../store/Context";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, setDoc, getFirestore } from "firebase/firestore";
 import { auth } from "../../firebase/config";
+
 import "./Signup.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -14,10 +16,25 @@ export default function Signup() {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const { firebase } = useContext(FirebaseContext);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSumbit = async (e) => {
     e.preventDefault();
 
+    if (userName.trim() == "") {
+      setError("Plese Type valid Name");
+      return;
+    }
+    if (phone.length !== 10) {
+      setError("Please enter valid number");
+      return;
+    }
+    if (password.trim() == "") {
+      setError("Please enter valid Password");
+      return;
+    }
+    setLoading(true);
     try {
       const result = await createUserWithEmailAndPassword(
         auth,
@@ -36,7 +53,8 @@ export default function Signup() {
       });
       navigate("/login");
     } catch (error) {
-      console.error("Error creating user or storing data in Firestore:", error);
+      setLoading(false);
+      setError("invalid Email or Password");
     }
   };
 
@@ -44,6 +62,7 @@ export default function Signup() {
     <div>
       <div className="signupParentDiv">
         <img width="200px" height="200px" src={Logo}></img>
+        <h5 style={{ color: "red" }}>{error}</h5>
         <form onSubmit={handleSumbit}>
           <label htmlFor="fname">Username</label>
           <br />
@@ -53,6 +72,11 @@ export default function Signup() {
             id="fname"
             value={userName}
             onChange={(e) => setUserName(e.target.value)}
+            onBlur={(e) =>
+              e.target.value.trim() == ""
+                ? setError("Plese Enter valid Name")
+                : setError("")
+            }
             name="name"
             defaultValue="John"
           />
@@ -64,11 +88,25 @@ export default function Signup() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            onBlur={(e) =>
+              e.target.value.trim() == ""
+                ? setError("Plese Enter valid  email")
+                : setError("")
+            }
             id="fname"
             name="email"
             defaultValue="John"
           />
           <br />
+          <div style={{ marginLeft: "100px" }}>
+            {loading ? (
+              <div className="spinner-border" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            ) : (
+              ""
+            )}
+          </div>
           <label htmlFor="lname">Phone</label>
           <br />
           <input
@@ -76,6 +114,11 @@ export default function Signup() {
             type="number"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
+            onBlur={(e) =>
+              e.target.value.length !== 10
+                ? setError("Plese Enter valid  Number")
+                : setError("")
+            }
             id="lname"
             name="phone"
             defaultValue="Doe"
@@ -88,6 +131,11 @@ export default function Signup() {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onBlur={(e) =>
+              e.target.value.trim() == ""
+                ? setError("Plese Enter valid Password")
+                : setError("")
+            }
             id="lname"
             name="password"
             defaultValue="Doe"
